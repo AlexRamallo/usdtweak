@@ -1,41 +1,48 @@
 cmake_minimum_required (VERSION 3.14)
 project(usdtweak)
-find_package(OpenGL REQUIRED)
-find_package(pxr REQUIRED)
-if (${PXR_VERSION} VERSION_GREATER_EQUAL 2208)
-    if(UNIX AND NOT APPLE)
-        find_package(X11 REQUIRED)
-    endif()
-    find_package(MaterialX)
-endif()
-set(CMAKE_CXX_STANDARD 14)
-if (${PXR_VERSION} VERSION_GREATER_EQUAL 2311)
-    set(CMAKE_CXX_STANDARD 17)
-endif()
+# find_package(OpenGL REQUIRED)
+# find_package(pxr REQUIRED)
+# if (${PXR_VERSION} VERSION_GREATER_EQUAL 2208)
+#     if(UNIX AND NOT APPLE)
+#         find_package(X11 REQUIRED)
+#     endif()
+#     find_package(MaterialX)
+# endif()
+# set(CMAKE_CXX_STANDARD 14)
+# if (${PXR_VERSION} VERSION_GREATER_EQUAL 2311)
+#     set(CMAKE_CXX_STANDARD 17)
+# endif()
 
 
-# for glfw, if the user doesn't specify the glfw install dir, we attempt to
-# download the latest version and add it to the project directly
-if (DEFINED glfw3_DIR)
-    find_package(glfw3 3.4 REQUIRED)
-else ()
-    # Fix the DOWNLOAD_EXTRACT_TIMESTAMP warning on cmake 3.23+
-    if(POLICY CMP0135)
-        cmake_policy(SET CMP0135 NEW)
-        set(CMAKE_POLICY_DEFAULT_CMP0135 NEW)
-    endif()
-    include(FetchContent)
-    FetchContent_Declare(
-        glfw
-        URL https://github.com/glfw/glfw/releases/download/3.4/glfw-3.4.zip
-    )
-    set(GLFW_BUILD_EXAMPLES OFF)
-    set(GLFW_BUILD_TESTS OFF)
-    set(GLFW_BUILD_DOCS OFF)
-    set(GLFW_INSTALL OFF)
-    set(GLFW_USE_HYBRID_HPG ON)
-    FetchContent_MakeAvailable(glfw)
-endif (DEFINED glfw3_DIR)
+# # for glfw, if the user doesn't specify the glfw install dir, we attempt to
+# # download the latest version and add it to the project directly
+# if (DEFINED glfw3_DIR)
+#     find_package(glfw3 3.4 REQUIRED)
+# else ()
+#     # Fix the DOWNLOAD_EXTRACT_TIMESTAMP warning on cmake 3.23+
+#     if(POLICY CMP0135)
+#         cmake_policy(SET CMP0135 NEW)
+#         set(CMAKE_POLICY_DEFAULT_CMP0135 NEW)
+#     endif()
+#     include(FetchContent)
+#     FetchContent_Declare(
+#         glfw
+#         URL https://github.com/glfw/glfw/releases/download/3.4/glfw-3.4.zip
+#     )
+#     set(GLFW_BUILD_EXAMPLES OFF)
+#     set(GLFW_BUILD_TESTS OFF)
+#     set(GLFW_BUILD_DOCS OFF)
+#     set(GLFW_INSTALL OFF)
+#     set(GLFW_USE_HYBRID_HPG ON)
+#     FetchContent_MakeAvailable(glfw)
+# endif (DEFINED glfw3_DIR)
+
+
+find_package(opengl_system REQUIRED CONFIG)
+find_package(openusd REQUIRED CONFIG)
+find_package(glfw3 REQUIRED CONFIG)
+
+set(OPENGL_gl_LIBRARY opengl::opengl)
 
 # Get the stamp informations, git hash, time stamp, stuff like that
 add_custom_target(stamp
@@ -71,7 +78,7 @@ add_subdirectory(src)
 target_link_libraries(usdtweak glfw resources ${OPENGL_gl_LIBRARY} ${PXR_LIBRARIES} ${MATERIALX_LIBRARIES} $<$<CXX_COMPILER_ID:MSVC>:Shlwapi.lib>)
 target_include_directories(usdtweak PUBLIC ${OPENGL_INCLUDE_DIR} ${PXR_INCLUDE_DIRS})
 
-set(USE_PYTHON3 OFF CACHE BOOL "Compile with the Python3 target")
+set(USE_PYTHON3 ON CACHE BOOL "Compile with the Python3 target")
 if (USE_PYTHON3)
     message(STATUS "Looking for Python3 target")
     find_package(Python3 COMPONENTS Development)
@@ -91,8 +98,8 @@ endif()
 
 # Remove warnings coming from usd and enable default multithreaded compilation on windows
 target_compile_options(usdtweak PRIVATE
-	$<$<CXX_COMPILER_ID:MSVC>:/MP /wd4244 /wd4305 /wd4996>
-	$<$<CXX_COMPILER_ID:GNU>:-Wno-deprecated>)
+    $<$<CXX_COMPILER_ID:MSVC>:/MP /wd4244 /wd4305 /wd4996>
+    $<$<CXX_COMPILER_ID:GNU>:-Wno-deprecated>)
 
 # NOMINMAX
 target_compile_definitions(usdtweak PRIVATE NOMINMAX)

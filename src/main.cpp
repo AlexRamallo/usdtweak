@@ -92,6 +92,8 @@ int main(int argc, char *const *argv) {
     // Setup a glfw error callback before we try to initialize
     glfwSetErrorCallback(glfw_error_callback);
 
+    glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_X11);
+
     // Initialize glfw
     if (!glfwInit()) {
         std::cout << "Failure to initialize glfw" << std::endl;

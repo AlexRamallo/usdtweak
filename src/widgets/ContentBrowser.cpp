@@ -310,7 +310,7 @@ void DrawContentBrowser(Editor &editor) {
     SdfLayerHandle selectedStage(editor.GetCurrentStage() ? editor.GetCurrentStage()->GetRootLayer() : SdfLayerHandle());
     auto layers = SdfLayer::GetLoadedLayers();
     DrawLayerSet(editor.GetStageCache(), layers, &selectedLayer, &selectedStage, options);
-    if (selectedLayer != editor.GetCurrentLayer()) {
+    if (selectedLayer != SdfLayerHandle(editor.GetCurrentLayer())) {
         ExecuteAfterDraw<EditorSetSelection>(selectedLayer, SdfPath::AbsoluteRootPath());
     }
 }
