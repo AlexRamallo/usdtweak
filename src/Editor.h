@@ -1,22 +1,26 @@
 #pragma once
+#include "Constants.h"
 #include "EditorSettings.h"
 #include "Selection.h"
 #include "Viewport.h"
+#include "usdtweak_api.h"
+
+#include <future>
+#include <vector>
+
+#include <pxr/base/tf/notice.h>
 #include <pxr/usd/sdf/layer.h>
 #include <pxr/usd/sdf/primSpec.h>
 #include <pxr/usd/usdUtils/stageCache.h>
-#include "Constants.h"
-#include <set>
-#include <future>
 
 struct GLFWwindow;
 
 PXR_NAMESPACE_USING_DIRECTIVE
 
 /// Editor contains the data shared between widgets, like selections, stages, etc etc
-class Editor {
+class USDTWEAK_API Editor {
 
-public:
+  public:
     Editor();
     ~Editor();
 
@@ -57,7 +61,7 @@ public:
     void AddLayerPathSelection(const SdfPath &primPath);
     void SetStagePathSelection(const SdfPath &primPath);
     void AddStagePathSelection(const SdfPath &primPath);
-    
+
     /// Create a new layer in file path
     void CreateNewLayer(const std::string &path);
     void FindOrOpenLayer(const std::string &path);
@@ -159,12 +163,25 @@ public:
 
     /// Selected attribute, for showing in the spreadsheet or metadata
     SdfPath _selectedAttribute;
-    
+
     /// Storing the tasks created by launchers.
     std::vector<std::future<int>> _launcherTasks;
 
     /// Playback controls
     bool _isPlaying = false;
     std::chrono::time_point<std::chrono::steady_clock> _lastFrameTime;
-    
+};
+
+/// Events
+
+class EditorDrawMainMenuBarNotice : public TfNotice {
+  public:
+    inline EditorDrawMainMenuBarNotice(Editor *e) : _editor() {}
+    Editor *_editor;
+};
+
+class EditorDrawTopLevelNotice : public TfNotice {
+  public:
+    inline EditorDrawTopLevelNotice(Editor *e) : _editor() {}
+    Editor *_editor;
 };

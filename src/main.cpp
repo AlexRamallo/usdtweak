@@ -1,16 +1,20 @@
 
 // clang-format off
+#include "3rdparty/imgui/imgui.h"
+#include "UsdTweakPluginRegistry.h"
 #include <iostream>
 #include <cstdlib>
 #ifdef WANTS_PYTHON
 #include <Python.h>
 #endif
 #include <pxr/base/plug/registry.h>
+#include <pxr/base/plug/plugin.h>
 #include <pxr/base/arch/env.h>
 #include <pxr/base/arch/systemInfo.h>
 #include <pxr/imaging/glf/contextCaps.h>
 #include <pxr/imaging/glf/simpleLight.h>
 #include <pxr/imaging/glf/diagnostic.h>
+
 #include "Editor.h"
 #include "Viewport.h"
 #include "Commands.h"
@@ -24,7 +28,6 @@
 #endif
 
 // clang-format on
-
 
 PXR_NAMESPACE_USING_DIRECTIVE
 
@@ -55,9 +58,7 @@ static bool InstallApplicationPluginPaths(const std::vector<std::string> &plugin
     return false;
 }
 
-static void glfw_error_callback(int error, const char* description) {
-    std::cerr << "Error: " << description << std::endl;
-}
+static void glfw_error_callback(int error, const char *description) { std::cerr << "Error: " << description << std::endl; }
 
 int main(int argc, char *const *argv) {
 
@@ -67,7 +68,7 @@ int main(int argc, char *const *argv) {
     ResourcesLoader loader;
 
     // Adding the plugin paths specified in the config file to the environment. It potentially means restarting the
-    // application with a new environment. Unfortunately USD is not able to dynamically load plugin 
+    // application with a new environment. Unfortunately USD is not able to dynamically load plugin
     // functionalities after startup time, the functions like RegisterPlugins or Load simply does not
     // do what one would expect, more there:
     // https://groups.google.com/g/usd-interest/c/fpLYyf6elmU/m/haZf9bZDAgAJ
@@ -92,7 +93,9 @@ int main(int argc, char *const *argv) {
     // Setup a glfw error callback before we try to initialize
     glfwSetErrorCallback(glfw_error_callback);
 
+#ifdef GLFW_PLATFORM_X11
     glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_X11);
+#endif
 
     // Initialize glfw
     if (!glfwInit()) {
@@ -171,6 +174,15 @@ int main(int argc, char *const *argv) {
         ImGui::SetCurrentContext(mainUIContext);
         Editor editor;
 
+        // registry loads plugins on first instantiation, so do it here after Editor init, but
+        // before any potentially interesting events (like OpenStage)
+        UsdTweakPluginRegistry::GetInstance();
+
+        auto plugs = UsdTweakPluginRegistry::GetInstance().GetPlugins();
+        for (auto &plug : plugs) {
+            std::cout << "PLUG: " << plug->GetName() << "\n";
+        }
+
         // Connect the window callbacks to the editor
         editor.InstallCallbacks(window);
 
@@ -224,7 +236,7 @@ int main(int argc, char *const *argv) {
     ImGui::SetCurrentContext(hydraUIContext);
     ImGui_ImplOpenGL3_Shutdown();
     ImGui::DestroyContext(hydraUIContext);
-    
+
     // Shutdown imgui
     ImGui::SetCurrentContext(mainUIContext);
     ImGui_ImplOpenGL3_Shutdown();

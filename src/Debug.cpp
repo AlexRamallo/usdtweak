@@ -82,7 +82,7 @@ void DrawDebugUI() {
     // Draw floating debug windows
     // Code can be found in:
     //    ImGui::ShowMetricsWindow(&open);
-    ImGuiMetricsConfig* cfg = &g.DebugMetricsConfig;
+    ImGuiMetricsConfig *cfg = &g.DebugMetricsConfig;
     if (cfg->ShowIDStackTool) {
         ImGui::ShowIDStackToolWindow(&cfg->ShowIDStackTool);
     }
@@ -109,5 +109,4 @@ void DrawDebugUI() {
     } else if (current_item == 4) {
         ImGui::Checkbox("Show ID Stack Tool", &cfg->ShowIDStackTool);
     }
-
 }

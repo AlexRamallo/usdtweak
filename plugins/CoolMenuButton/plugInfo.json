@@ -1,0 +1,18 @@
+{
+    "Plugins": [
+        {
+            "Info": {
+                "Types": {
+                    "CoolMenuButtonPlugin": {
+                        "bases": ["UsdTweakPluginBase"],
+                        "displayName": "Cool plugin that adds a button to the menu bar"
+                    }
+                }
+            }, 
+            "LibraryPath": "@PLUG_LIB_PATH@", 
+            "Name": "CoolMenuButton",
+            "Type": "library",
+            "Root": "."
+        }
+    ]
+}

@@ -1,5 +1,6 @@
 
 target_sources(usdtweak PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/UsdTweakPluginRegistry.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Blueprints.h
     ${CMAKE_CURRENT_SOURCE_DIR}/Blueprints.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Constants.h
@@ -23,10 +24,14 @@ target_sources(usdtweak PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Selection.h
     ${CMAKE_CURRENT_SOURCE_DIR}/Stamp.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Stamp.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
 )
 
-target_include_directories(usdtweak PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(usdtweak PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+
+target_sources(usdtweak_app PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp    
+)
+target_link_libraries(usdtweak_app PRIVATE usdtweak)
 
 add_subdirectory(commands)
 add_subdirectory(3rdparty)

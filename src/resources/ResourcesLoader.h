@@ -1,10 +1,11 @@
 #pragma once
 #include "EditorSettings.h"
 #include "ViewportSettings.h"
+#include "usdtweak_api.h"
 
 // Load fonts, ini settings, texture and initialise an imgui context.
 // It allows to keep data that have a longer lifetime than the editor or the widgets.
-class ResourcesLoader {
+class USDTWEAK_API ResourcesLoader {
   public:
     ResourcesLoader();
     ~ResourcesLoader();

@@ -1,5 +1,6 @@
 #include "CommandStack.h"
 #include "SdfCommandGroupRecorder.h"
+#include "usdtweak_api.h"
 
 CommandStack *CommandStack::instance = nullptr;
 
@@ -42,7 +43,7 @@ struct UndoCommand : public Command {
     ~UndoCommand() override {}
 
     /// Undo the last command in the stack
-    bool DoIt() override ;
+    bool DoIt() override;
     bool UndoIt() override { return false; }
 };
 
@@ -55,7 +56,6 @@ struct RedoCommand : public Command {
     bool DoIt() override;
     bool UndoIt() override { return false; }
 };
-
 
 struct ClearUndoRedoCommand : public Command {
 
@@ -131,8 +131,5 @@ template void ExecuteAfterDraw<UsdFunctionCall>(SdfLayerRefPtr layer, std::funct
 template void ExecuteAfterDraw<UsdFunctionCall>(SdfLayerHandle layer, std::function<void()> func);
 template void ExecuteAfterDraw<UsdFunctionCall>(UsdStageRefPtr stage, std::function<void()> func);
 
-
 // Should go in Commands.cpp ???
-void ExecuteCommands() {
-    CommandStack::GetInstance().ExecuteCommands();
-}
+USDTWEAK_API void ExecuteCommands() { CommandStack::GetInstance().ExecuteCommands(); }

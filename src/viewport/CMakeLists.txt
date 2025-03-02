@@ -32,4 +32,4 @@ target_sources(usdtweak PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/ViewportCameras.h
 )
 
-target_include_directories(usdtweak PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(usdtweak PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

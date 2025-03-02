@@ -1,7 +1,9 @@
-#include <vector>
 #include <string>
+#include <vector>
 
-class CommandLineOptions {
+#include "usdtweak_api.h"
+
+class USDTWEAK_API CommandLineOptions {
   public:
     CommandLineOptions(int argc, char *const *argv);
 

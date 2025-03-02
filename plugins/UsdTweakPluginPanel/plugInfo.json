@@ -1,0 +1,17 @@
+{
+    "Plugins": [
+        {
+            "Info": {
+                "Types": {
+                    "UsdTweakPluginPanel": {
+                        "bases": ["UsdTweakPluginBase"],
+                        "displayName": "UI for viewing usdtweak plugins"
+                    }
+                }
+            }, 
+            "LibraryPath": "@PLUG_LIB_PATH@", 
+            "Name": "UsdTweakPluginPanel",
+            "Type": "library"
+        }
+    ]
+}

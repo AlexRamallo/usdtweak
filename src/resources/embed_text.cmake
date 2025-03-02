@@ -7,7 +7,8 @@ function(embed_text source destination)
         string(APPEND cpp_source "\"${line}\\n\"\n" )
     endforeach()
     get_filename_component(variable_name ${source} NAME_WE)
-    file(WRITE "${destination}" "\ 
+    file(WRITE "${destination}" "\
+#pragma comment(linker, \"/export: ${variable_name}\")
 const char *${variable_name} = 
 ${cpp_source};
 ")

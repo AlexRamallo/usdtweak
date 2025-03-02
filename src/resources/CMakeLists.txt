@@ -4,7 +4,7 @@ target_sources(usdtweak PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/ResourcesLoader.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/ResourcesLoader.h
 )
-target_include_directories(usdtweak PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(usdtweak PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 # Application icon on windows
 if(MSVC)
@@ -40,6 +40,7 @@ foreach (glsl_file ${GLSL_SOURCES})
     embed_glsl(${cpp_file} ${glsl_file})
     # Save the variable name in a list
     get_filename_component(variable_name ${glsl_file} NAME_WE)
+    string(APPEND glsl_header "#pragma comment(linker, \"/export: ${variable_name}\")\n")
     string(APPEND glsl_header "extern const char *${variable_name};\n")
     # Add the generated cpp to the resources target
     target_sources(resources PRIVATE ${cpp_file})
@@ -66,6 +67,7 @@ add_custom_command(
 # not really necessary, but useful in the IDE
 target_sources(resources PRIVATE ${default_ini_header})
 
+set_target_properties(resources PROPERTIES CXX_VISIBILITY_PRESET default)
 
 # Organise the source files in folders in xcode and visual studio
 get_target_property(RESOURCES_SOURCES resources SOURCES)

@@ -1,13 +1,15 @@
 #pragma once
 
+#include <functional>
+#include <pxr/usd/sdf/layer.h>
 #include <pxr/usd/usd/stage.h>
 #include <pxr/usd/usd/variantSets.h>
-#include <pxr/usd/sdf/layer.h>
+#include <pxr/usd/usdGeom/camera.h>
 #include <pxr/usd/usdGeom/gprim.h>
 #include <pxr/usd/usdGeom/xformCommonAPI.h>
-#include <pxr/usd/usdGeom/camera.h>
-#include <functional>
 #include <tuple>
+
+#include "usdtweak_api.h"
 
 PXR_NAMESPACE_USING_DIRECTIVE
 
@@ -85,8 +87,6 @@ struct UsdFunctionCall; // This should be name a SdfLayerFunctionCall to be prec
 
 // Commands using the usd APIs
 struct UsdAPIMaterialBind;
-
-
 
 /// Post a command to be executed after the editor frame is rendered.
 /// The commands are defined in Commands.cpp and its included file
@@ -170,7 +170,6 @@ void ExecuteAfterDraw(FuncT &&func, const UsdVariantSet &variantSet, ArgsT &&...
     ExecuteAfterDraw<UsdFunctionCall>(stage->GetEditTarget().GetLayer(), usdApiFunc);
 }
 
-
 template <typename FuncT, typename... ArgsT>
 void ExecuteAfterDraw(FuncT &&func, SdfAttributeSpecHandle att, ArgsT &&...arguments) {
     const auto path = att->GetPath();
@@ -213,7 +212,8 @@ void ExecuteAfterDraw(FuncT &&func, const UsdGeomXformCommonAPI &api, ArgsT &&..
 }
 
 /////// NOTES for later
-///// 1. To remove template clutter above, it might be possible to reduce all the templates into one that will find use an object location or identity.
+///// 1. To remove template clutter above, it might be possible to reduce all the templates into one that will find use an object
+/// location or identity.
 // template <typename HandleT, typename UsdObjectT>
 // HandleT GetHandleTo(UsdObjectT object);
 //
@@ -238,14 +238,13 @@ void ExecuteAfterDraw(FuncT &&func, const UsdGeomXformCommonAPI &api, ArgsT &&..
 //// 2. UsdFunctionCall is not persistent, it creates another command and it destroyed after creating it.
 //// We could simply copy the handle/ref/weak/ptrs
 
-
 /// Process the commands waiting in the queue. Only one command would be waiting at the moment
-void ExecuteCommands();
+USDTWEAK_API void ExecuteCommands();
 
 ///
 /// Allows to record one command spanning multiple frames.
 /// It is used in the manipulators, to record only one command for a translation/rotation etc.
 ///
-void BeginEdition(UsdStageRefPtr);
-void BeginEdition(SdfLayerRefPtr);
-void EndEdition();
+USDTWEAK_API void BeginEdition(UsdStageRefPtr);
+USDTWEAK_API void BeginEdition(SdfLayerRefPtr);
+USDTWEAK_API void EndEdition();

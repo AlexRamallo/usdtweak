@@ -1,4 +1,4 @@
- 
+#pragma comment(linker, "/export: GridFrag ")
 const char *GridFrag = 
 "#version 330 core\n"
 "//\n"
