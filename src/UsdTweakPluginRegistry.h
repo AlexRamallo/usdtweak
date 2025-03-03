@@ -1,6 +1,8 @@
 #pragma once
 #include "usdtweak_api.h"
 
+#include "Editor.h"
+
 #include <optional>
 #include <pxr/base/plug/plugin.h>
 #include <pxr/base/tf/singleton.h>
@@ -37,6 +39,13 @@ class USDTWEAK_API UsdTweakPluginRegistry {
 
     const UsdTweakPluginPtrArray &GetPlugins();
 
+    inline void SetEditor(Editor* s) {
+        _editor = s;
+    }
+    inline Editor* GetEditor() {
+        return _editor;
+    }
+
     VtDictionary GetConfig(const std::string &plugin);
     VtValue GetConfig(const std::string &plugin, const std::string &config_key);
 
@@ -68,4 +77,6 @@ class USDTWEAK_API UsdTweakPluginRegistry {
 
     // each key is a plugin name, value is a VtDictionary
     VtDictionary _config;
+
+    Editor* _editor = nullptr;
 };
