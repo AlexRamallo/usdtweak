@@ -1,7 +1,6 @@
 
 // clang-format off
 #include "3rdparty/imgui/imgui.h"
-#include "UsdTweakPluginRegistry.h"
 #include <iostream>
 #include <cstdlib>
 #ifdef WANTS_PYTHON
@@ -15,6 +14,9 @@
 #include <pxr/imaging/glf/simpleLight.h>
 #include <pxr/imaging/glf/diagnostic.h>
 
+#include <pxr/imaging/garch/glApi.h>
+
+#include "UsdTweakPluginRegistry.h"
 #include "Editor.h"
 #include "Viewport.h"
 #include "Commands.h"
@@ -176,11 +178,23 @@ int main(int argc, char *const *argv) {
 
         // registry loads plugins on first instantiation, so do it here after Editor init, but
         // before any potentially interesting events (like OpenStage)
-        UsdTweakPluginRegistry::GetInstance();
+        UsdTweakPluginRegistry::GetInstance().SetEditor(&editor);
 
-        auto plugs = UsdTweakPluginRegistry::GetInstance().GetPlugins();
-        for (auto &plug : plugs) {
-            std::cout << "PLUG: " << plug->GetName() << "\n";
+        // Automatically load all UsdTweakPluginBase plugins
+        std::set<TfType> utplugs;
+        PlugRegistry::GetInstance().GetAllDerivedTypes<UsdTweakPluginBase>(&utplugs);
+        for(const TfType& plug: utplugs)
+        {
+            if(auto ptr = PlugRegistry::GetInstance().GetPluginForType(plug)){
+                if(!ptr->Load()){
+                    std::cout << "Failed to load usdtweak plugin: " << ptr->GetName() << "\n";
+                }
+            }
+            else
+            {
+                // This not an error. It can happen if the plugin was statically linked
+                // It will still be 'loaded', just not here
+            }
         }
 
         // Connect the window callbacks to the editor
