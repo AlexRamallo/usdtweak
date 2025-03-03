@@ -3,6 +3,8 @@
 #include <pxr/usd/sdf/layer.h>
 #include <pxr/usd/sdf/path.h>
 
+#include "usdtweak_api.h"
+
 PXR_NAMESPACE_USING_DIRECTIVE
 
 ///
@@ -13,7 +15,7 @@ PXR_NAMESPACE_USING_DIRECTIVE
 
 using SelectionHash = std::size_t;
 
-struct Selection {
+struct USDTWEAK_API Selection {
 
     Selection();
     ~Selection();

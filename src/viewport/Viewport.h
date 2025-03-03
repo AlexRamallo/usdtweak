@@ -19,10 +19,11 @@
 #include <pxr/imaging/glf/drawTarget.h>
 #include <pxr/usd/usd/stage.h>
 #include <pxr/usdImaging/usdImagingGL/engine.h>
+#include "usdtweak_api.h"
 
 #include <ImagingSettings.h>
 
-class Viewport final {
+class USDTWEAK_API Viewport final {
   public:
     Viewport(UsdStageRefPtr stage, Selection &);
     ~Viewport();
