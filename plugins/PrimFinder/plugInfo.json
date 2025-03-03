@@ -1,0 +1,17 @@
+{
+    "Plugins": [
+        {
+            "Info": {
+                "Types": {
+                    "PrimFinder": {
+                        "bases": ["UsdTweakPluginBase"],
+                        "displayName": "Find prims using regex"
+                    }
+                }
+            }, 
+            "LibraryPath": "@PLUG_LIB_PATH@", 
+            "Name": "PrimFinder",
+            "Type": "library"
+        }
+    ]
+}

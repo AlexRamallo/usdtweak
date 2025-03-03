@@ -20,4 +20,5 @@ endfunction()
 # Plugins
 add_subdirectory(CoolMenuButton)
 add_subdirectory(UsdTweakPluginPanel)
+add_subdirectory(PrimFinder)
 
